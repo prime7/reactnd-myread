@@ -8,13 +8,12 @@ export default class BookSearch extends Component {
         query: '',
         newBooks: [],
     }
-    getBooks = (event) => {
-        this.searchBooks(event.target.value.trim());
-    }
-    
-    searchBooks = (query) => {
+    getBooks = (query) => {
         this.setState({query})
-        if(query){
+        if(query === ''){
+            this.setState({newBooks : []})
+        }
+        else if(query){
             BooksAPI.search(query)
                 .then((books) => {
                     books.length > 0 ? this.setState({ newBooks: books}) : this.setState({newBooks : []})
@@ -23,7 +22,7 @@ export default class BookSearch extends Component {
                 })
         }
     } 
-
+        
     render() {
         const { query, newBooks } = this.state;
         const { updateShelf, books } = this.props;
@@ -37,7 +36,7 @@ export default class BookSearch extends Component {
                         <input type="text"
                             placeholder="Search by title or author"
                             value={ query }
-                            onChange={ this.getBooks } />
+                            onChange={(e) => this.getBooks(e.target.value) } />
                         </div>
                     </div>
                     <div className="search-books-results">
